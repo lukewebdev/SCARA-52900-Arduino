@@ -16,7 +16,7 @@ int isShoulderHomed = false;
 
 const int stepperWaistStep = 10;
 const int stepperWaistDir = 11;
-const int maxWaist = 2000;//need to discover actual value
+const int maxWaist = 7956;//need to discover actual value
 int waistHomeOscillation = 40;
 int isWaistHomed = false;
 
@@ -45,16 +45,17 @@ AccelStepper stepperWrist(AccelStepper::DRIVER, stepperWristStep, stepperWristDi
 void setup()
 {
   Serial.begin(9600);
-  stepperShoulder.setMaxSpeed(3000);
-  stepperShoulder.setAcceleration(500);
+  
+  stepperShoulder.setMaxSpeed(8000);
+  stepperShoulder.setAcceleration(100);
 
-  stepperElbow.setMaxSpeed(3000);
-  stepperElbow.setAcceleration(500);
+  stepperElbow.setMaxSpeed(8000);
+  stepperElbow.setAcceleration(1000);
 
-  stepperWaist.setMaxSpeed(3000);
-  stepperWaist.setAcceleration(500);
+  stepperWaist.setMaxSpeed(8000);
+  stepperWaist.setAcceleration(1000);
 
-  stepperWrist.setMaxSpeed(200);
+  stepperWrist.setMaxSpeed(2000);
   stepperWrist.setAcceleration(1000);
 
   //PIN MODES
@@ -147,8 +148,10 @@ void waistHome() {
 }
 
 void elbowLimitsCheck() {
-  //stepperElbow.setMaxSpeed(2000);
-  //stepperElbow.setAcceleration(200);
+
+  stepperElbow.setMaxSpeed(1000);
+  stepperElbow.setAcceleration(200);
+
   if (digitalRead(limitElbowL) == HIGH) {
     Serial.println("Left Elbow Limit hit....");
     stepperElbow.setCurrentPosition(0);
@@ -165,7 +168,7 @@ void elbowLimitsCheck() {
     stepperElbow.moveTo(pos2);
     stepperElbow.runToPosition();
     stepperElbow.setCurrentPosition(0);
-    stepperElbow.moveTo(-1800);
+    //stepperElbow.moveTo(-1800);
     isElbowHomed = true;
     //stepperElbow.moveTo(0);
   }
@@ -227,18 +230,21 @@ void waistLimitCheck() {
     Serial.println(stepperWaist.currentPosition());
 
 
-    stepperWaist.moveTo(10000);
-    stepperWaist.run();
-    delay(2000);
+    stepperWaist.moveTo(0);
+    stepperWaist.runToPosition();
+    stepperWaist.setCurrentPosition(0);
+    //delay(2000);
   }
 
-  if(digitalRead(limitWaist) == HIGH && isWaistHomed == true && stepperWaist.currentPosition() > 1000){//checking upper limit
+ 
+
+  /*if(digitalRead(limitWaist) == HIGH && isWaistHomed == true && stepperWaist.currentPosition() > 1000){//checking upper limit
     Serial.print("waist upper limit is: ");
     Serial.println(stepperWaist.currentPosition());
     stepperWaist.moveTo(stepperWaist.currentPosition()/2);
     Serial.println("moving to half/waist");
     stepperWaist.setCurrentPosition(0);
-  }
+  }*/
 }
 
 void homeAll() {
