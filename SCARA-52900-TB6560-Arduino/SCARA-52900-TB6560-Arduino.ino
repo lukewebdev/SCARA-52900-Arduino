@@ -1,3 +1,7 @@
+//TB6560 Steppers should be configured as follows:
+//Sw1 On  Sw2 Off SW3 Off
+//DIP1,2,4,5,6,7: off off on off off off
+
 #include <MultiStepper.h>
 #include <AccelStepper.h>
 

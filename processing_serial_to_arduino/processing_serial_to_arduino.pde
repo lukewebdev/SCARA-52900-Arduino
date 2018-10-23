@@ -35,7 +35,8 @@ float a2 = 150; // elbow-to-wrist "bone" length from Solidworks (mm) - longer c 
 int gearA = 20; // Pulley gear ratio motor rev pr. arm rev.
 int gearB = 12;
 int gearC = 4;
-int gearZ = 30;
+//int gearZ = 30;
+int gearZ = 5;//???
 //if the visual does not match the movement of the robot, probably your microstep values need to be adjusted. try 2, 4, 8 or 16.
 int microStepA = 2; // stepper drivers microstepping setting puls pr. step 
 int microStepB = 2;
