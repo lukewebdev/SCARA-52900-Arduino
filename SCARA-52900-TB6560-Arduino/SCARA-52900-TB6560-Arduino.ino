@@ -14,7 +14,7 @@ int isElbowHomed = false;
 
 const int stepperShoulderStep = 12;
 const int stepperShoulderDir = 13;
-const int maxShoulder = 6320;
+const int maxShoulder = 6320;//6320 originally
 int isShoulderHomed = false;
 
 
@@ -24,6 +24,7 @@ const int maxWaist = 7956;//need to discover actual value
 int waistHomeOscillation = 40;
 int isWaistHomed = false;
 
+boolean isAllHomed = false;
 const int stepperWristStep = 6;
 const int stepperWristDir = 7;
 
@@ -50,17 +51,17 @@ void setup()
 {
   Serial.begin(9600);
   
-  stepperShoulder.setMaxSpeed(8000);
-  stepperShoulder.setAcceleration(100);
+  stepperShoulder.setMaxSpeed(2000);
+  stepperShoulder.setAcceleration(800);
 
   stepperElbow.setMaxSpeed(8000);
-  stepperElbow.setAcceleration(1000);
+  stepperElbow.setAcceleration(500);
 
   stepperWaist.setMaxSpeed(8000);
-  stepperWaist.setAcceleration(1000);
+  stepperWaist.setAcceleration(500);
 
-  stepperWrist.setMaxSpeed(2000);
-  stepperWrist.setAcceleration(1000);
+  stepperWrist.setMaxSpeed(8000);
+  stepperWrist.setAcceleration(500);
 
   //PIN MODES
   pinMode(limitElbowL , INPUT_PULLUP);
@@ -106,9 +107,10 @@ void loop()
     if (!stepperElbow.isRunning() && !stepperShoulder.isRunning() && !stepperWaist.isRunning() && isElbowHomed == true && isShoulderHomed == true && isWaistHomed == true) { // these have been homed.
      //stepperWrist.setSpeed(4100);
      //stepperWrist.runSpeed();
-
     }
     if(isElbowHomed == true && isShoulderHomed == true && isWaistHomed == true){
+
+     
       //TAKE POSITION FROM PROCESSING APP.
       if (Serial.available()) { // If data is available to read,
         processing_position = Serial.readStringUntil('\n'); // read it and store it in val
@@ -125,8 +127,6 @@ void loop()
         stepperElbow.run();
         delay(10); // Wait 10 milliseconds for next reading
       }
-
-     
     }
   
 
@@ -152,9 +152,6 @@ void waistHome() {
 }
 
 void elbowLimitsCheck() {
-
-  stepperElbow.setMaxSpeed(1000);
-  stepperElbow.setAcceleration(200);
 
   if (digitalRead(limitElbowL) == HIGH) {
     Serial.println("Left Elbow Limit hit....");
@@ -206,6 +203,7 @@ void shoulderLimitsCheck() {
         delay(5);
         Serial.println("Nudging Shoulder Home");
       }
+      stepperShoulder.setCurrentPosition(0);
       //posShoulder = maxShoulder;
       isShoulderHomed = true;
       stepperShoulder.moveTo(maxShoulder-30);
